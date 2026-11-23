@@ -79,6 +79,8 @@ def get_tr_omr_canvas_size(
     else:
         # The width is the limiting factor.
         new_shape = [tr_omr_max_width, int(height / width * tr_omr_max_width)]
+    new_shape[0] = max(1, new_shape[0])
+    new_shape[1] = max(1, new_shape[1])
     return np.array(new_shape)
 
 
@@ -278,11 +280,34 @@ def parse_staffs(
                 eprint("Ignoring staff due to selected_staff argument", i)
                 i += 1
                 continue
-            result_staff = parse_staff_image(debug, i, staff, image, regions, config)
+            try:
+                result_staff = parse_staff_image(debug, i, staff, image, regions, config)
+            except Exception as e:
+                eprint("Skipping staff", i, "after error:", e)
+                i += 1
+                continue
             if len(result_staff) == 0:
                 eprint("Skipping empty staff", i)
                 i += 1
                 continue
+            try:
+                import json as _json
+                measures_conf = []
+                cur: list[float] = []
+                for sym in result_staff:
+                    if sym.rhythm == "barline":
+                        measures_conf.append(
+                            round(min(cur), 4) if cur else None)
+                        cur = []
+                        continue
+                    c = getattr(sym, "confidence", None)
+                    if c is not None:
+                        cur.append(c)
+                measures_conf.append(round(min(cur), 4) if cur else None)
+                eprint("[measure-conf]", _json.dumps(
+                    {"staff": i, "voice": voice, "conf": measures_conf}))
+            except Exception:
+                pass
             result_staff.append(EncodedSymbol("newline"))
             result_for_voice.extend(result_staff)
             i += 1

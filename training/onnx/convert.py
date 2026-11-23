@@ -179,6 +179,7 @@ def convert_decoder(overwrite: bool) -> str | None:
         opset_version=18,
         do_constant_folding=True,
         export_params=True,
+        dynamo=False,
     )
     return path_out
 

@@ -131,6 +131,15 @@ class ScoreDecoder:
                 position=position_token[0],
                 coordinates=attention,
             )
+            try:
+                r_last = rhythmsp[:, -1, :].reshape(-1).astype(np.float64)
+                p_last = pitchsp[:, -1, :].reshape(-1).astype(np.float64)
+
+                def _maxprob(v: NDArray) -> float:
+                    return float(1.0 / np.exp(v - v.max()).sum())
+                symbol.confidence = min(_maxprob(r_last), _maxprob(p_last))
+            except Exception:
+                symbol.confidence = None
             symbols.append(symbol)
 
             out_lift = np.concatenate((out_lift, lift_sample), axis=-1)
