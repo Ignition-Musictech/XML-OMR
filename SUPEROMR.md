@@ -9,6 +9,7 @@ under the GNU Affero General Public License v3.0, see `LICENSE`.
 - `homr/staff_parsing.py`
 - `homr/transformer/decoder_inference.py`
 - `training/onnx/convert.py`
+- `README.md`
 
 ## Added files (2026)
 

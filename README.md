@@ -1,5 +1,7 @@
 # homr
 
+This is a fork of [homr](https://github.com/liebharc/homr) with modifications listed in [SUPEROMR.md](SUPEROMR.md).
+
 homr is an Optical Music Recognition (OMR) software designed to transform camera pictures of sheet music into
 machine-readable MusicXML format. The resulting [MusicXML](https://www.w3.org/2021/06/musicxml40/) files can be further
 processed using tools such as [musescore](https://musescore.com/).
